@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Birthday Gift Ghibli Pink Butterfly</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+        background: url("estetikbg.jpg") no-repeat center center fixed;
+        background-size: cover;
+        font-family: "Poppins", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    /* subtle dark gradient overlay to make text pop on varied backgrounds */
+    body::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.34));
+        pointer-events: none;
+        backdrop-filter: blur(6px) saturate(1.05);
+    }
+
+    /* Butterfly explosion */
+    .butterfly-pop {
+        position: fixed;
+        width: 45px;
+        height: 45px;
+        background-image: url("https://i.ibb.co/6gv7t0G/butterfly.gif");
+        background-size: cover;
+        pointer-events: none;
+        animation: popFly 3.5s ease-out forwards;
+    }
+
+    @keyframes popFly {
+        0% { transform: translate(0,0) scale(0.3); opacity: 1; }
+        40% { transform: translate(var(--x), var(--y)) scale(1); opacity: 1; }
+        100% { transform: translate(calc(var(--x)*1.6), calc(var(--y)*1.6)) scale(1.2); opacity: 0; }
+    }
+
+    /* Gift box (blue) */
+    .gift {
+        position: relative;
+        width: 160px;
+        height: 160px;
+        background: #1e90ff;
+        border-radius: 15px;
+        cursor: pointer;
+        box-shadow: 0 0 25px #1e90ff, 0 0 50px #66b7ff;
+        transition: 0.4s;
+        z-index: 20;
+    }
+
+    .gift:hover { transform: scale(1.07); }
+
+    .lid {
+        position: absolute;
+        width: 180px;
+        height: 45px;
+        left: 50%;
+        top: -25px;
+        transform: translateX(-50%);
+        background: #6bbcff;
+        border-radius: 15px;
+        transition: 0.4s;
+        box-shadow: 0 0 15px #6bbcff;
+    }
+
+    .open {
+        transform: translateX(-50%) rotate(-60deg) translateY(-80px);
+    }
+
+    /* Content */
+    .content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        opacity: 0;
+        z-index: 10;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 50px; /* jarak antar judul, foto, ucapan */
+    }
+
+    /* Judul dinaikkan 200px dan animasi masuk */
+    .name {
+        font-size: 42px;
+        font-weight: bold;
+        color: #dfeaff;
+        text-shadow: 0 0 10px #8cc6ff, 0 0 30px #a7d6ff, 0 0 60px #c6e6ff;
+        transform: translateY(-200px) scale(0.8);
+        opacity: 0;
+        animation: fadeInDown 1.2s forwards 1.5s; /* delay supaya muncul setelah box */
+    }
+
+    .photo {
+        width: 180px;
+        height: 180px;
+        border-radius: 20px;
+        box-shadow: 0 0 20px white;
+        opacity: 0;
+        transform: scale(0.8);
+        animation: fadeInUp 1.2s forwards 2s; /* animasi muncul dari bawah */
+        object-fit: cover;
+    }
+
+    .wish {
+        color: white;
+        font-size: 20px;
+        text-shadow: 0 0 15px #8cc6ff;
+        transform: translateY(50px);
+        opacity: 0;
+        animation: fadeInUp 1.2s forwards 2.5s;
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+        0% { opacity: 0; transform: translateY(-200px) scale(0.8);}
+        100% { opacity: 1; transform: translateY(0) scale(1);}
+    }
+
+    @keyframes fadeInUp {
+        0% { opacity: 0; transform: translateY(50px) scale(0.8);}
+        100% { opacity: 1; transform: translateY(0) scale(1);}
+    }
+
+    /* Top-left menu */
+    .top-left-menu {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        background: rgba(255,255,255,0.06);
+        backdrop-filter: blur(6px);
+        padding: 8px;
+        border-radius: 10px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 150px;
+        opacity: 0;
+        transform: translateY(-6px);
+        pointer-events: none;
+        transition: opacity 260ms ease, transform 260ms ease;
+    }
+
+    .top-left-menu .menu-item {
+        color: #fff;
+        font-weight: 600;
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+        transition: transform 0.18s, background 0.18s, box-shadow 0.18s;
+        cursor: pointer;
+        user-select: none;
+        text-shadow: 0 0 6px rgba(0,0,0,0.35);
+    }
+
+    .top-left-menu .menu-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        background: rgba(255,255,255,0.04);
+    }
+
+    .top-left-menu.visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    /* Modal styles */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(4px);
+        z-index: 220;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 220ms ease;
+    }
+
+    .modal-overlay.visible { opacity: 1; pointer-events: auto; }
+
+    .modal {
+        position: relative;
+        width: min(420px, 92%);
+        padding: 26px 22px;
+        border-radius: 14px;
+        /* Strong cyan background with glow */
+        background: linear-gradient(135deg, #16f7f7 0%, #12e9e9 100%);
+        border: 1px solid rgba(255,255,255,0.12);
+        box-shadow:
+            0 12px 40px rgba(22,247,247,0.22),
+            0 0 120px rgba(22,247,247,0.20),
+            inset 0 3px 10px rgba(255,255,255,0.06);
+        color: #fff;
+        transform: scale(.98);
+        transition: transform 240ms ease, box-shadow 240ms ease;
+        overflow: visible;
+    }
+
+    .modal-overlay.visible .modal { transform: scale(1); }
+
+    .modal .modal-close {
+        position: absolute;
+        top: 8px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+        z-index: 320; /* keep close button above decorative elements */
+    }
+
+    /* corner hearts for Memory modal */
+    .corner-heart {
+        position: absolute;
+        font-size: 22px;
+        pointer-events: none;
+        opacity: 0.98;
+        filter: drop-shadow(0 6px 14px rgba(0,0,0,0.45));
+        transform-origin: center center;
+        transition: transform 360ms ease, opacity 360ms ease;
+    }
+
+    .corner-heart.top-left { top: 8px; left: 12px; color: #ff6b6b; transform: rotate(-12deg); }
+    .corner-heart.top-right { top: 8px; right: 48px; color: #ffffff; transform: rotate(8deg); }
+    .corner-heart.bottom-left { bottom: 8px; left: 12px; color: #6bffb3; transform: rotate(10deg); }
+    .corner-heart.bottom-right { bottom: 8px; right: 12px; color: #6bd0ff; transform: rotate(-8deg); }
+
+    .corner-heart:hover { transform: translateY(-4px) scale(1.06); opacity: 1; }
+
+    .modal .message {
+        font-size: 18px;
+        line-height: 1.5;
+        text-align: center;
+        padding: 8px 6px;
+        color: #fff;
+        text-shadow: 0 6px 30px rgba(18,230,230,0.35), 0 2px 8px rgba(0,0,0,0.35);
+    }
+
+    /* extra glowing halo */
+    .modal::before {
+        content: "";
+        position: absolute;
+        inset: -8px;
+        border-radius: 18px;
+        background: radial-gradient(circle at center, rgba(22,247,247,0.18), transparent 50%);
+        filter: blur(18px);
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    /* Corner butterfly decorations */
+    .corner-butterfly {
+        position: absolute;
+        width: 56px;
+        height: 56px;
+        background-image: url("kupu.gif");
+        background-size: contain;
+        background-repeat: no-repeat;
+        pointer-events: none;
+        filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
+        animation: float 3.6s ease-in-out infinite;
+        opacity: 0.95;
+    }
+
+    .corner-butterfly.top-left { top: -22px; left: -22px; transform: rotate(-10deg); }
+    .corner-butterfly.top-right { top: -22px; right: -22px; transform: rotate(10deg); }
+    .corner-butterfly.bottom-left { bottom: -22px; left: -22px; transform: rotate(10deg); }
+    .corner-butterfly.bottom-right { bottom: -22px; right: -22px; transform: rotate(-10deg); }
+
+    @keyframes float {
+        0% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-6px) rotate(4deg); }
+        100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    /* Memory grid */
+    .mem-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px; /* doubled spacing */
+        margin-top: 18px; /* bring photos closer to close button */
+    }
+
+    .mem-photo {
+        width: 100%;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.45), 0 4px 12px rgba(22,247,247,0.06) inset;
+        transition: transform 200ms ease, box-shadow 200ms ease, filter 200ms ease;
+        cursor: pointer;
+    }
+
+    .mem-photo:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.55), 0 6px 18px rgba(22,247,247,0.08) inset;
+        filter: saturate(1.05) drop-shadow(0 8px 18px rgba(0,0,0,0.45));
+    }
+
+    /* Kuputerbang effect (big flourish + small particles) */
+    /* very large static flourish (scaled 500x) shown when the gift opens */
+    .kuputerbang-large {
+        position: fixed;
+        left: 50%;
+        top: 42%;
+        transform-origin: center center;
+        /* explicit base size so scale takes effect */
+        width: 200px;
+        height: 200px;
+        transform: translate(-50%, -50%) scale(500);
+        max-width: none;
+        background-image: url("kuputerbang.gif");
+        background-repeat: no-repeat;
+        background-size: contain;
+        z-index: 260;
+        pointer-events: none;
+        opacity: 1;
+        /* stronger but reasonable drop-shadow for very large scale */
+        filter: drop-shadow(0 1600px 2400px rgba(18,230,230,0.24));
+        will-change: transform, filter;
+    }
+
+    @keyframes kuputerPop {
+        0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6) rotate(-6deg); }
+        20% { opacity: 1; transform: translate(-50%, -50%) scale(1.05) rotate(0deg); }
+        60% { transform: translate(-50%, -55%) scale(1) rotate(2deg); }
+        100% { opacity: 0; transform: translate(-50%, -60%) scale(1.06) rotate(-2deg); }
+    }
+
+    .kuputer-particle {
+        position: fixed;
+        width: 42px;
+        height: 42px;
+        background-image: url("kuputerbang.gif");
+        background-size: contain;
+        background-repeat: no-repeat;
+        z-index: 240;
+        pointer-events: none;
+        opacity: 0.95;
+        filter: drop-shadow(0 10px 18px rgba(0,0,0,0.45));
+        animation: kuputerFloat 3600ms ease-out forwards;
+    }
+
+    @keyframes kuputerFloat {
+        0% { transform: translateX(var(--dx, 0px)) translateY(0) scale(0.9) rotate(-20deg); opacity: 0.95; }
+        30% { transform: translateX(calc(var(--dx, 0px) * 0.35)) translateY(-40px) scale(1.02) rotate(0deg); opacity: 1; }
+        100% { transform: translateX(calc(var(--dx, 0px) * 0.9)) translateY(-220px) scale(0.9) rotate(24deg); opacity: 0; }
+    }
+</style>
+</head>
+<body>
+
+<!-- MUSIC AUTOPLAY -->
+<audio id="music" autoplay loop>
+    <source src="sempurna.mp3">
+</audio>
+
+<!-- TOP LEFT MENU -->
+<nav class="top-left-menu" role="navigation" aria-label="Menu Kiri Atas">
+    <div class="menu-item" id="menuPesan">Pesan Dari Ajuzz</div>
+    <div class="menu-item" id="menuMemory">Memory Us</div>
+</nav>
+
+<!-- MODAL: Pesan Dari Ajuzz -->
+<div class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+        <button class="modal-close" aria-label="Tutup">✕</button>
+        <div class="message">HAPPYY BIRTHHDAYY SAYANGG, SELAMATT ULANGG TAHUNN KE 16 YAAHH 🥳🎊🎉. horeee cewekkuu sudahh besarrr, umurr muu akhirnya nyusull akuu yahh kelazz kelazz. selamattt ulangg tahunn yaa cewekkuu, semogaa kamuu kedepannyaa lebihh baikk darii sebelum sebelumnyaa yahh, semogaa makinn cantiii, makinn gemeshh, makinn 😋, makinn pintarrr, semogaa rezekiimuu dilancarrkann yaah sayang, semogaa semua yang terbaik untukmu…, makasiii sudaaa mauu menemanikuu sampaii saat inii sayangg, ihopeeyouknoww, iiloveeyouuunlimitedveryverymuch. Terimakasiii sudaa mauu menjadii pasangann kuu sampaii saat inii sayangg 🥺🤍🫂</div>
+
+        <!-- decorative butterflies in corners -->
+        <div class="corner-butterfly top-left" aria-hidden="true"></div>
+        <div class="corner-butterfly bottom-left" aria-hidden="true"></div>
+        <div class="corner-butterfly bottom-right" aria-hidden="true"></div>
+    </div>
+</div>
+
+<!-- MODAL: Memory Us (6 photos) -->
+<div class="modal-overlay memory-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+        <button class="modal-close" aria-label="Tutup">✕</button>
+        <div class="mem-grid" aria-live="polite">
+            <img class="mem-photo" src="us1.jpg" alt="Us 1" onerror="this.src='gemoyna.jpg'">
+            <img class="mem-photo" src="us2.jpg" alt="Us 2" onerror="this.src='gemoyna.jpg'">
+            <img class="mem-photo" src="us3.jpg" alt="Us 3" onerror="this.src='gemoyna.jpg'">
+            <img class="mem-photo" src="us4.jpg" alt="Us 4" onerror="this.src='gemoyna.jpg'">
+            <img class="mem-photo" src="us5.jpg" alt="Us 5" onerror="this.src='gemoyna.jpg'">
+            <img class="mem-photo" src="us6.jpg" alt="Us 6" onerror="this.src='gemoyna.jpg'">
+        </div>
+
+        <!-- decorative butterflies in corners (optional) -->
+        <div class="corner-butterfly top-left" aria-hidden="true"></div>
+        <div class="corner-butterfly bottom-left" aria-hidden="true"></div>
+        <div class="corner-butterfly bottom-right" aria-hidden="true"></div>
+
+        <!-- abstract colored heart emojis at each corner (non-interactive) -->
+        <div class="corner-heart top-left" aria-hidden="true">❤</div>
+        <div class="corner-heart top-right" aria-hidden="true">💛</div>
+        <div class="corner-heart bottom-left" aria-hidden="true">💚</div>
+        <div class="corner-heart bottom-right" aria-hidden="true">💙</div>
+    </div>
+</div>
+
+<!-- GIFT BOX -->
+<div class="gift" id="giftBox">
+    <div class="lid" id="lid"></div>
+</div>
+
+<!-- CONTENT -->
+<div class="content" id="contentBox">
+    <div class="name" id="title">Happy Birthday <span id="namaOrang">Cewekkkuuu</span>! 🥺🤍🫶🏻</div>
+    <img src="gemoyna.jpg" class="photo" id="photo">
+    <div class="wish" id="wishText">Semogaaaa naaa panjang umur dan sehat selalu yaa!</div>
+</div>
+
+<script>
+let opened = false;
+
+// MUSIC AUTOPLAY FIX
+window.addEventListener("load", () => {
+    let m = document.getElementById("music");
+    m.volume = 1.0;
+    m.muted = false;
+    m.play().catch(()=>{
+        // If autoplay is blocked, play on first user interaction
+        const resume = () => { m.play().catch(()=>{}); document.removeEventListener('click', resume); };
+        document.addEventListener('click', resume);
+    });
+});
+
+document.getElementById("giftBox").onclick = function() {
+    if (opened) return;
+    opened = true;
+
+    const box = document.getElementById("giftBox");
+    const lid = document.getElementById("lid");
+
+    // Lid animation
+    lid.classList.add("open");
+
+    // After lid opens → remove gift box
+    setTimeout(() => {
+
+        // Butterfly burst AFTER box disappears
+        giftButterflyExplosion();
+
+        box.style.opacity = "0";
+        box.style.transform = "scale(0.5)";
+        
+        setTimeout(() => box.remove(), 500);
+
+    }, 600);
+
+        // Show kuputerbang flourish immediately and start periodic bursts
+        showKuputerbangFull();
+        startKuputerbangLoop();
+
+    // Delay before showing content
+    setTimeout(() => {
+        const c = document.getElementById("contentBox");
+        c.style.opacity = "1";
+        c.style.transform = "translate(-50%, -50%)";
+
+        const p = document.getElementById("photo");
+        p.style.opacity = "1";
+        p.style.transform = "scale(1)";
+        // Show top-left menu when the gift has been opened
+        setTimeout(() => {
+            const menu = document.querySelector('.top-left-menu');
+            if (menu) menu.classList.add('visible');
+        }, 300);
+    }, 1300);
+};
+
+function giftButterflyExplosion() {
+    for (let i = 0; i < 30; i++) {
+        let b = document.createElement("div");
+        b.classList.add("butterfly-pop");
+
+        let angle = Math.random() * Math.PI * 2;
+        let distance = 200 + Math.random() * 150;
+
+        b.style.setProperty('--x', Math.cos(angle) * distance + "px");
+        b.style.setProperty('--y', Math.sin(angle) * distance + "px");
+
+        b.style.left = (window.innerWidth / 2 - 20) + "px";
+        b.style.top = (window.innerHeight / 2 - 20) + "px";
+
+        document.body.appendChild(b);
+
+        setTimeout(() => b.remove(), 4000);
+    }
+}
+
+// Kuputerbang effects: full flourish + repeating particles
+function showKuputerbangFull() {
+    const full = document.createElement('div');
+    full.className = 'kuputerbang-large';
+    document.body.appendChild(full);
+    // removed automatically by animation end
+    setTimeout(() => full.remove(), 2500);
+}
+
+function spawnKuputerParticle() {
+    // dynamic cap to prevent performance issues
+    window._kuputerbangActive = window._kuputerbangActive || 0;
+    window._kuputerbangCap = window._kuputerbangCap || 420; // reduced to ~3x baseline
+    if (window._kuputerbangActive >= window._kuputerbangCap) return;
+
+    const p = document.createElement('div');
+    p.className = 'kuputer-particle';
+
+    // random size and duration for variety
+    const size = 24 + Math.floor(Math.random() * 64); // 24-87px
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+
+    const dur = 2400 + Math.floor(Math.random() * 3600); // 2400-6000ms
+    p.style.animationDuration = dur + 'ms';
+
+    // horizontal drift using CSS var
+    const dx = Math.floor((Math.random() - 0.5) * 600); // -300 .. 300px
+    p.style.setProperty('--dx', dx + 'px');
+
+    // position near center with slight random offset
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const offsetX = (Math.random() - 0.5) * 240; // spread
+    const offsetY = (Math.random() - 0.5) * 80;
+
+    p.style.left = (centerX + offsetX) + 'px';
+    p.style.top = (centerY + offsetY) + 'px';
+
+    document.body.appendChild(p);
+    window._kuputerbangActive++;
+
+    // cleanup after animation completes
+    setTimeout(() => { p.remove(); window._kuputerbangActive = Math.max(0, window._kuputerbangActive - 1); }, dur + 200);
+}
+
+function startKuputerbangLoop() {
+    if (window._kuputerbangStarted) return;
+    window._kuputerbangStarted = true;
+
+    // initial burst (reduced to ~3x)
+    for (let i = 0; i < 60; i++) setTimeout(spawnKuputerParticle, i * 60);
+
+    // periodic moderate bursts (approx 18-36 particles), adaptive to cap
+    window._kuputerbangInterval = setInterval(() => {
+        let count = 18 + Math.floor(Math.random() * 19); // 18..36
+        const allowed = Math.max(0, (window._kuputerbangCap || 420) - (window._kuputerbangActive || 0));
+        if (allowed <= 1) return; // nothing allowed right now
+        count = Math.min(count, Math.max(1, Math.floor(allowed * 0.6)));
+        for (let i = 0; i < count; i++) setTimeout(spawnKuputerParticle, i * 60 + Math.floor(Math.random() * 240));
+    }, 6000 + Math.floor(Math.random() * 3000));
+}
+
+// --- Modal behavior for "Pesan Dari Ajuzz" ---
+document.addEventListener('DOMContentLoaded', () => {
+    const menuPesan = document.getElementById('menuPesan');
+    const overlay = document.querySelector('.modal-overlay');
+    const closeBtn = document.querySelector('.modal-close');
+
+    const menuMemory = document.getElementById('menuMemory');
+    const memOverlay = document.querySelector('.memory-overlay');
+    const memCloseBtn = memOverlay ? memOverlay.querySelector('.modal-close') : null;
+
+    function openModal() {
+        if (!overlay) return;
+        overlay.classList.add('visible');
+        overlay.setAttribute('aria-hidden', 'false');
+        if (closeBtn) closeBtn.focus();
+        // prevent background scroll while modal open
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        if (!overlay) return;
+        overlay.classList.remove('visible');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    function closeMemModal() {
+        if (!memOverlay) return;
+        memOverlay.classList.remove('visible');
+        memOverlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    if (menuPesan) {
+        menuPesan.addEventListener('click', (ev) => { ev.stopPropagation(); openModal(); });
+    }
+
+    if (menuMemory && memOverlay) {
+        menuMemory.addEventListener('click', (ev) => { ev.stopPropagation(); memOverlay.classList.add('visible'); memOverlay.setAttribute('aria-hidden', 'false'); if (memCloseBtn) memCloseBtn.focus(); document.body.style.overflow = 'hidden'; });
+    }
+
+    if (memCloseBtn) memCloseBtn.addEventListener('click', closeMemModal);
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+    if (overlay) {
+        overlay.addEventListener('click', (ev) => { if (ev.target === overlay) closeModal(); });
+    }
+
+    if (memOverlay) {
+        memOverlay.addEventListener('click', (ev) => { if (ev.target === memOverlay) { memOverlay.classList.remove('visible'); memOverlay.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; } });
+    }
+
+    document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && overlay && overlay.classList.contains('visible')) closeModal(); });
+    document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && memOverlay && memOverlay.classList.contains('visible')) { memOverlay.classList.remove('visible'); memOverlay.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; } });
+});
+</script>
+
+</body>
+</html>

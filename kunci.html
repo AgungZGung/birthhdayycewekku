@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Blue Neon Lock</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+    background: radial-gradient(circle, #001122, #000814);
+    height: 100vh;
+    font-family: "Poppins", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Blue neon glow */
+.neon {
+    text-shadow: 0 0 10px #4da6ff, 0 0 20px #3e8fff, 
+                 0 0 40px #3380ff, 0 0 80px #1c6eff;
+}
+
+/* Main card */
+.container {
+    display: flex;
+    background: rgba(0, 20, 50, 0.55);
+    backdrop-filter: blur(14px);
+    width: 760px;
+    border-radius: 25px;
+    box-shadow: 0 0 45px #1a5fdc;
+    padding: 30px;
+    border: 1px solid #3e8fff;
+    transition: 0.3s;
+    justify-content: center;
+    gap: 40px;
+}
+
+/* FOTO */
+.photo {
+    width: 260px;
+    height: 350px;
+    border-radius: 18px;
+    object-fit: cover;
+    box-shadow: 0 0 25px #3e8fff;
+    border: 2px solid #4da6ff;
+    margin-top: 75px;
+    margin-left: 50px;
+}
+
+/* right */
+.right {
+    flex: 1;
+    padding: 10px 40px;
+}
+
+/* title */
+.title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #b7d9ff;
+}
+
+.dots {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid #4da6ff;
+    box-shadow: 0 0 8px #4da6ff;
+}
+
+.dot.filled {
+    background: #4da6ff;
+    box-shadow: 0 0 12px #4da6ff, 0 0 30px #1f70ff;
+}
+
+/* keypad */
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    width: 260px;
+}
+
+.key {
+    background: rgba(50, 100, 255, 0.2);
+    border-radius: 50%;
+    width: 75px;
+    height: 75px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #b7d9ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 2px solid #2f7fff;
+    transition: 0.2s;
+    box-shadow: 0 0 12px #144cc6;
+}
+
+.key:hover {
+    background: rgba(80, 130, 255, 0.3);
+    transform: scale(1.08);
+}
+
+.key:active {
+    background: #3e8fff;
+    color: white;
+    box-shadow: 0 0 30px #4da6ff;
+}
+
+/* REMOVE & ENTER buttons */
+.special {
+    background: rgba(255,255,255,0.08);
+    border-radius: 14px;
+    font-size: 20px;
+    padding: 14px 5px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid #4da6ff;
+    color: #b7d9ff;
+    box-shadow: 0 0 12px #144cc6;
+    margin-top: 15px; /* SUDAH DITAMBAHKAN */
+}
+.special:hover {
+    background: rgba(100,150,255,0.15);
+    transform: scale(1.05);
+}
+
+/* Wrong password vibration */
+.shake {
+    animation: shakeAnim 0.4s;
+}
+
+@keyframes shakeAnim {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-12px); }
+    40% { transform: translateX(12px); }
+    60% { transform: translateX(-10px); }
+    80% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- SOUND CLICK -->
+<audio id="klik" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_d2b9d9b8ac.mp3?filename=ui-click-1-176072.mp3"></audio>
+
+<div class="container" id="card">
+
+    <img src="kuncigemoy.jpg" class="photo">
+
+    <div class="right">
+        <div class="title neon">Masukkan Kata Kunci</div>
+
+        <div class="dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+
+        <div class="keypad">
+            <div class="key">1</div>
+            <div class="key">2</div>
+            <div class="key">3</div>
+            <div class="key">4</div>
+            <div class="key">5</div>
+            <div class="key">6</div>
+            <div class="key">7</div>
+            <div class="key">8</div>
+            <div class="key">9</div>
+
+            <div class="special" id="remove">REMOVE</div>
+            <div class="key">0</div>
+            <div class="special" id="enter">ENTER</div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+let password = "28122025";
+let input = "";
+let dots = document.querySelectorAll(".dot");
+let card = document.getElementById("card");
+let klikSound = document.getElementById("klik");
+
+function checkPassword() {
+    if (input === password) {
+        card.style.boxShadow = "0 0 60px #4dff88";
+        card.style.border = "2px solid #57ff8f";
+
+        setTimeout(() => {
+            window.location.href = "game.html";
+        }, 600);
+
+    } else {
+        card.classList.add("shake");
+        setTimeout(() => card.classList.remove("shake"), 500);
+        dots.forEach(d => d.classList.remove("filled"));
+        input = "";
+    }
+}
+
+document.querySelectorAll(".key").forEach(key => {
+    key.onclick = () => {
+        klikSound.currentTime = 0;
+        klikSound.play();
+
+        if (input.length < 8) {
+            input += key.textContent;
+            dots[input.length - 1].classList.add("filled");
+        }
+    };
+});
+
+/* REMOVE BUTTON */
+document.getElementById("remove").onclick = () => {
+    if (input.length > 0) {
+        dots[input.length - 1].classList.remove("filled");
+        input = input.slice(0, -1);
+    }
+};
+
+/* ENTER BUTTON */
+document.getElementById("enter").onclick = () => {
+    checkPassword();
+};
+</script>
+
+</body>
+</html>
