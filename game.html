@@ -483,7 +483,7 @@
 				try{ const selectorEl = document.getElementById('selector'); if(selectorEl) selectorEl.remove(); }catch(e){}
 				try{ const gameAreaEl = document.getElementById('gameArea'); if(gameAreaEl) gameAreaEl.remove(); }catch(e){}
 				// show final popup and on OK navigate to local index.html
-				showPopup("WOKAIIII, NAAA HEBATT SUDAHH SELESAIII SEMUANYAAA!!, lanjutt ke web selanjutnyaa ya naa!!", '', {autoHide:false, onOk:()=>{ try{ bgMusic.pause(); }catch(e){}; window.location.href = 'index.html'; }, buttonText:'Lanjut'});
+				showPopup("WOKAIIII, NAAA HEBATT SUDAHH SELESAIII SEMUANYAAA!!, lanjutt ke web selanjutnyaa ya naa!!", '', {autoHide:false, onOk:()=>{ try{ bgMusic.pause(); }catch(e){}; window.location.href = 'next.html'; }, buttonText:'Lanjut'});
 				return;
 			}
 			showPopup(message + ' 🎉');
@@ -620,3 +620,4 @@
 	</script>
 </body>
 </html>
+
